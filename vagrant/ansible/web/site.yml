@@ -1,0 +1,40 @@
+---
+
+- hosts: all
+  sudo: yes
+  user: vagrant
+  roles:
+    - common
+
+  vars:
+    admin_pw: "password"
+
+  tasks:
+
+    - name: install dependencies
+      apt: name={{item}} state=present
+      with_items:
+        - openjdk-7-jre-headless
+        - tomcat7
+        - tomcat7-admin
+
+    - name: ensure no conflicting admin user exists
+      lineinfile: >
+        dest=/etc/tomcat7/tomcat-users.xml
+        state=absent
+        backrefs=yes
+        regexp='<user username="admin" password="[^"]*" roles="[^"]*"/>'
+
+    - name: add admin with specified password
+      lineinfile: >
+        dest=/etc/tomcat7/tomcat-users.xml
+        state=present
+        line='<user username="admin" password="{{admin_pw}}" roles="standard,manager,admin,manager-gui,admin-gui"/>'
+        insertbefore='</tomcat-users>'
+
+    - name: create symbolic link to war
+      file: src=/vagrant/bin/simpleapi.war dest=/var/lib/tomcat7/webapps/simpleapi.war state=link
+
+    - name: restart tomcat service to effect changes
+      service: name=tomcat7 state=restarted
+
