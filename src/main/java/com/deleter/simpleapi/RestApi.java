@@ -6,7 +6,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
- * Root resource (exposed at "api" path)
+ * Root resource (exposed at "v1" path)
  */
 @Path("v1")
 public class RestApi {

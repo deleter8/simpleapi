@@ -1,10 +1,10 @@
 package com.deleter.simpleapi;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Welcome {
 
-    @JsonProperty("message") 
+    @JsonProperty("message")
     private String message;
     
 	public String getMessage() {
